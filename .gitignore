@@ -1,0 +1,21 @@
+# Mac metadata file
+.DS_Store
+
+# Pycache 
+__pycache__/*
+
+# Jupyter notebook checkpoints 
+.ipynb_checkpoints
+*/.ipynb_checkpoints/**
+
+# Anything in data folder or any netcdf file 
+data/* 
+*.nc 
+*/*.nc
+
+# Figures 
+figs/*
+figures/* 
+
+# Results 
+results/*
