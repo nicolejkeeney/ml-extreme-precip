@@ -11,7 +11,9 @@ IMG_NAME = ml-extreme-precip
 notebook:
 	@echo "Opening JupyterLab from runtime instance of $(IMG_NAME)"
 	@echo "Copy/paste the last link in the terminal output into your web browser to open JupyterLab"
-	docker run -t --rm --volume "$(PWD)":/home/jovyan -p 8888:8888 $(IMG_NAME) jupyter lab --ip 0.0.0.0
+	docker run -t --rm --volume "$(PWD)":/home/jovyan -p 8888:8888 \
+	-e AWS_ACCESS_KEY_ID=$(AWS_ACCESS_KEY_ID) -e AWS_SECRET_ACCESS_KEY=$(AWS_SECRET_ACCESS_KEY) \
+	$(IMG_NAME) jupyter lab --ip 0.0.0.0
 
 # "make build"
 # YOU ONLY NEED TO DO THIS ONCE 
