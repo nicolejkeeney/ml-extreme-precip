@@ -5,6 +5,10 @@
 # Name to give the image 
 IMG_NAME = ml-extreme-precip
 
+# Creation date
+# Will be used as image tag
+CREATION_DATE = sep-14-2023
+
 # "make notebook"
 # Launch local JupyerLab from containerized instance of IMG_NAME
 # Open JupyterLab by clicking the bottom link in the terminal output 
@@ -24,7 +28,7 @@ build:
 	@echo "A conda environment will be created in the image using a conda-lock.yml file if it exists. If not, the environment.yml will be used."
 	@echo "Pip dependencies will be installed from the requirements.txt if it exists."
 	@echo "Output from the build will be saved in a log file build.log"
-	docker build -t $(IMG_NAME) .  &> build.log
+	docker build --no-cache -t $(IMG_NAME):$(CREATION_DATE) .  &> build.log
 
 # "make conda-lock" 
 # Make conda-lock.yml from environment.yml 
