@@ -1,5 +1,3 @@
 # ml-extreme-precip
-Using machine learning to predict extreme precipitation. 
 
-## Data 
-1) The shapefile of the boundary for the South Platte River Basin was aquired from [colorado.gov's repository of shapefiles](https://cdss.colorado.gov/gis-data/gis-data-by-category). 
+This project attempts to reproduce the analysis performed in [Davenport & Diffenbaugh (2021)](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2021GL093787) for the state of Colorado, using a random forest instead of a convolutional neural network. The input data is daily anomalies of sea level pressure and geopotential height at 500 hPa, along with IMERG precipitation estimates. Random forest code builds upon the code repository from Elizabeth Barnes' machine learning course, specifically the notebook [rf_regress_christman.ipynb](https://github.com/eabarnes1010/course_ml_ats/blob/main/code/rf_regress_christman.ipynb)
