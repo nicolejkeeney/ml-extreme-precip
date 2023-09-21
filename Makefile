@@ -7,7 +7,7 @@ IMG_NAME = ml-extreme-precip
 
 # Creation date
 # Will be used as image tag
-CREATION_DATE = sep-14-2023
+CREATION_DATE = sep-21-2023
 
 # "make notebook"
 # Launch local JupyerLab from containerized instance of IMG_NAME

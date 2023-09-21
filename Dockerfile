@@ -118,6 +118,11 @@ USER ${NB_USER}
 # If a lock file is not present, we use the environment.yml file. 
 # After installing the packages, we cleanup some unnecessary files
 # to try reduce image size - see https://jcristharif.com/conda-docker-tips.html
+
+# Set environment variable to point to proj installation location 
+# Following instructions from GitHub discussion: https://github.com/planetlabs/notebooks/issues/101#issuecomment-580538409
+ENV PROJ_LIB=${CONDA_DIR}/share/proj
+
 RUN echo "Checking for 'conda-lock.yml' 'conda-linux-64.lock' or 'environment.yml'..." \
         ; [ -d binder ] && cd binder \
         ; [ -d .binder ] && cd .binder \
@@ -136,10 +141,6 @@ RUN echo "Checking for 'conda-lock.yml' 'conda-linux-64.lock' or 'environment.ym
         ; if [ -d ${NB_PYTHON_PREFIX}/lib/python*/site-packages/bokeh/server/static ]; then \
         find ${NB_PYTHON_PREFIX}/lib/python*/site-packages/bokeh/server/static -follow -type f -name '*.js' ! -name '*.min.js' -delete \
         ; fi
-
-# Set environment variable to point to proj installation location 
-# Following instructions from GitHub discussion: https://github.com/planetlabs/notebooks/issues/101#issuecomment-580538409
-ENV PROJ_LIB=${CONDA_DIR}/share/proj
 
 # If a requirements.txt file exists, use pip to install packages
 # listed there. We don't want to save cached wheels in the image
