@@ -1,13 +1,13 @@
 # ml-extreme-precip
 
-This project attempts to reproduce the analysis performed in Davenport & Diffenbaugh (2021)  for the state of Colorado, using a random forest instead of a convolutional neural network. The goal is to predict extreme precipitation, where extreme precipitation is defined by precipitation that exceeds the 95th percentile of daily precipitation. Thus, this is a classification problem. 
+This project attempts to reproduce the analysis performed in Davenport & Diffenbaugh (2021)  for the state of Colorado, using a random forest instead of a convolutional neural network. The goal is to predict extreme precipitation, where extreme precipitation is defined by precipitation that exceeds the 95th percentile of daily precipitation. 
 
 ## Input data 
 *Features*: [NCEP-NCAR Renanalysis-1](https://psl.noaa.gov/data/gridded/data.ncep.reanalysis.html)
 - Daily anomalies of sea level pressure 
 - Daily anomalies of detrended geopotential height at 500 hPa
 
-<br>*Labels*: [IMERG precipitation](https://gpm.nasa.gov/data/imerg)
+<br>*Labels*: [CHIRPS precipitation]([https://gpm.nasa.gov/data/imerg](https://www.chc.ucsb.edu/data/chirps))
 - Daily extreme precipitation classes, either class 0 (no extreme precip) or class 1 (extreme precip)
 
 ## References
