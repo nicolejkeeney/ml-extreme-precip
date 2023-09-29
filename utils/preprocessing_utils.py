@@ -3,6 +3,21 @@
 import xarray as xr 
 import geopandas as gpd 
 import rioxarray as rio
+from shapely.geometry import box
+
+
+def get_features_geom(): 
+    """Get bounding box geom for features data
+    From Davenport & Diffenbaugh 2021: spatial domain that covers the continental U.S. and surrounding oceans (20°N to 55°N and 140°W to 55°W
+    """
+    geom = box(
+        55,  # minx
+        20,  # miny
+        140,  # maxx
+        55,  # maxy
+    )
+    geom = gpd.GeoSeries(geom, crs="4326")
+    return geom 
 
 def calc_anomalies(data, var): 
     """
@@ -84,7 +99,7 @@ def convert_lon_360_to_180(data):
     data = data.sortby(data.lon)
     return data 
 
-def clip_to_geom(data, geom, keep_spatial_ref=False): 
+def clip_to_geom(data, geom, lon_name="lon", lat_name="lat", keep_spatial_ref=False): 
     """
     Clip data to input geometry
 
@@ -98,6 +113,12 @@ def clip_to_geom(data, geom, keep_spatial_ref=False):
     keep_spatial_ref: boolean, optional 
         Keep spatial reference information as a coordinate in output data? 
         Default to False. 
+    lon_name: str, optional 
+        Name of longitude coordinate 
+        Default to "lon" 
+    lat_name: str, optional 
+        Name of latitude coordinate 
+        Default to "lat" 
 
     Returns 
     -------
@@ -105,7 +126,7 @@ def clip_to_geom(data, geom, keep_spatial_ref=False):
     
     """
     data = data.rio.write_crs("4326") # Assign CRS 
-    rio_rename = {"lon":"x","lat":"y"} # Rioxarray requires spatial coordinates be named x,y
+    rio_rename = {lon_name:"x",lat_name:"y"} # Rioxarray requires spatial coordinates be named x,y
     data = data.rename(rio_rename)
     data_clipped = data.rio.clip(geom) # Clip to geometry 
     data_clipped = data_clipped.rename({v: k for k, v in rio_rename.items()}) # Go back to lat/lon coords 
