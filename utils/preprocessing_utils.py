@@ -45,7 +45,7 @@ def calc_anomalies(data, var):
     data[var+'_anom'] = (data[var].groupby('time.dayofyear') - data['mean']).groupby('time.dayofyear')/data['sd']
     return data 
 
-def get_state_geom(state="Colorado", shp_path="../data/cb_2018_us_state_5m/", crs="4326"): 
+def get_state_geom(state="Colorado", shp_path="../../data/cb_2018_us_state_5m/", crs="4326"): 
     """
     Get geometry for a specific state 
     Requires shapefile of US state boundaries 
