@@ -128,7 +128,7 @@ def clip_to_geom(data, geom, lon_name="lon", lat_name="lat", keep_spatial_ref=Fa
     data = data.rio.write_crs("4326") # Assign CRS 
     rio_rename = {lon_name:"x",lat_name:"y"} # Rioxarray requires spatial coordinates be named x,y
     data = data.rename(rio_rename)
-    data_clipped = data.rio.clip(geom) # Clip to geometry 
+    data_clipped = data.rio.clip(geom, all_touched=True) # Clip to geometry 
     data_clipped = data_clipped.rename({v: k for k, v in rio_rename.items()}) # Go back to lat/lon coords 
     if keep_spatial_ref == False: 
         data_clipped = data_clipped.drop("spatial_ref")
