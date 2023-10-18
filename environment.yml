@@ -29,6 +29,7 @@ dependencies:
   - notebook=7.0.3  
   - pip
   - pandas=2.1.1 
+  - plotly=5.17.0
   - proj=9.3.0
   - pyproj=3.6.1   
   - pydot=1.2.4
