@@ -22,41 +22,32 @@ from glob import glob
 import time
 from datetime import datetime
 import geopandas as gpd
-from shapely.geometry import box
 import os
 
 # Import helper functions
 from utils.preprocessing_utils import (
+    get_features_geom
     convert_lon_360_to_180,
     clip_to_geom,
     calc_anomalies,
 )
-from utils.misc_utils import format_nbytes
+from utils.misc_utils import (
+    format_nbytes, 
+    check_and_create_dir
+)
 import utils.parameters as param
 
 print("Starting script to preprocesses NCAR-NCEP reanalysis data...")
 start_time = time.time()
 DATA_DIR = "../data/"
-
-## -------- Define geometry --------
+GEOM_NAME = "CONUS"
 
 # Get geometry
-geom_name = "CONUS_box"
-geom = box(
-    -140,  # minx
-    20,  # miny
-    -55,  # maxx
-    55,  # maxy
-)
-geom = gpd.GeoSeries(geom, crs="4326")
+geom = get_features_geom(geom_name=GEOM_NAME)
 
 # Make directory for saving preprocessed data if it doesn't already exist
-PREPROCESSED_DATA_DIR = DATA_DIR + "input_data_preprocessed/" + geom_name + "/"
-for dir in ["training", "validation", "testing"]:
-    fullpath = PREPROCESSED_DATA_DIR + dir
-    if not os.path.exists(fullpath):
-        os.makedirs(fullpath)
-        print("Created directory: {0}".format(fullpath))
+PREPROCESSED_DATA_DIR = DATA_DIR + "input_data_preprocessed/labels/" + GEOM_NAME +"/"
+check_and_create_dir(PREPROCESSED_DATA_DIR)
 
 ## -------- Preprocess sea level pressure data --------
 
@@ -181,9 +172,9 @@ validation = output_ds.sel(time=param.validation_period)
 testing = output_ds.sel(time=param.testing_period)
 
 # Output to netcdf
-training.to_netcdf(PREPROCESSED_DATA_DIR + "training/training_features.nc")
-validation.to_netcdf(PREPROCESSED_DATA_DIR + "validation/validation_features.nc")
-testing.to_netcdf(PREPROCESSED_DATA_DIR + "testing/testing_features.nc")
+training.to_netcdf(PREPROCESSED_DATA_DIR + "training_features.nc")
+validation.to_netcdf(PREPROCESSED_DATA_DIR + "validation_features.nc")
+testing.to_netcdf(PREPROCESSED_DATA_DIR + "testing_features.nc")
 
 print("Script complete!")
 time_elapsed = time.strftime("%H:%M:%S", time.gmtime(time.time() - start_time))

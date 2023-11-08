@@ -24,23 +24,21 @@ import os
 # Import helper functions
 from utils.preprocessing_utils import get_state_geom, clip_to_geom
 import utils.parameters as param
+from utils.misc_utils import check_and_create_dir
 
 # Setup
-print("Starting script to preprocesses CHIRPS precip data...")
-start_time = time.time()
 DATA_DIR = "../data/"
+GEOM_NAME = "Arizona"
 
 # Get geometry
-geom_name = "Colorado"
-geom = get_state_geom(state=geom_name, shp_path=DATA_DIR + "cb_2018_us_state_5m/")
+geom = get_state_geom(state=GEOM_NAME, shp_path=DATA_DIR + "cb_2018_us_state_5m/")
 
 # Make directory for saving preprocessed data if it doesn't already exist
-PREPROCESSED_DATA_DIR = DATA_DIR + "input_data_preprocessed/" + geom_name + "/"
-for dir in ["training", "validation", "testing"]:
-    fullpath = PREPROCESSED_DATA_DIR + dir
-    if not os.path.exists(fullpath):
-        os.makedirs(fullpath)
-        print("Created directory: {0}".format(fullpath))
+PREPROCESSED_DATA_DIR = DATA_DIR + "input_data_preprocessed/labels/" + GEOM_NAME + "/"
+check_and_create_dir(PREPROCESSED_DATA_DIR)
+
+print("Preprocessesing CHIRPS precip data for geometry {}...".format(GEOM_NAME))
+start_time = time.time()
 
 # Read in data
 var = "precip"
@@ -81,7 +79,7 @@ ds_mean = ds_mean.compute()
 
 # Compute 95th percentile precip
 perc_95 = ds_mean[var + "_mean"].quantile(0.95).item()
-print("95th percentile precip over {0}: {1}".format(geom_name, perc_95))
+print("95th percentile precip over {0}: {1}".format(GEOM_NAME, perc_95))
 
 # Assign classes based on exceedance of 95th percentile
 extremes_var = "precip_classes"
@@ -101,9 +99,9 @@ validation = output_df.loc[param.validation_time_start : param.validation_time_e
 testing = output_df.loc[param.testing_time_start : param.testing_time_end]
 
 # Output as csv
-training.to_csv(PREPROCESSED_DATA_DIR + "training/training_labels.csv")
-validation.to_csv(PREPROCESSED_DATA_DIR + "validation/validation_labels.csv")
-testing.to_csv(PREPROCESSED_DATA_DIR + "testing/testing_labels.csv")
+training.to_csv(PREPROCESSED_DATA_DIR + "training_labels.csv")
+validation.to_csv(PREPROCESSED_DATA_DIR + "validation_labels.csv")
+testing.to_csv(PREPROCESSED_DATA_DIR + "testing_labels.csv")
 
 print("Script complete!")
 time_elapsed = time.strftime("%H:%M:%S", time.gmtime(time.time() - start_time))

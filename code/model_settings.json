@@ -1,0 +1,191 @@
+{
+    "frances_missouri": {
+        "labels_geom": "Missouri",
+        "features_geom": "CONUS",
+        "epochs": 500,
+        "batch_size": 2048,
+        "learning_rate": 0.004,
+        "activity_reg": 0.001,
+        "conv_filters": 16,
+        "dense_neurons": 16,
+        "dense_layers": 1,
+        "random_seed": 333,
+        "dropout_rate": 0.2
+    },
+    "frances_colorado": {
+        "labels_geom": "Colorado",
+        "features_geom": "CONUS",
+        "epochs": 500,
+        "batch_size": 2048,
+        "learning_rate": 0.004,
+        "activity_reg": 0.001,
+        "conv_filters": 16,
+        "dense_neurons": 16,
+        "dense_layers": 1,
+        "random_seed": 333,
+        "dropout_rate": 0.2
+    },
+    "frances_michigan": {
+        "labels_geom": "Michigan",
+        "features_geom": "CONUS",
+        "epochs": 500,
+        "batch_size": 2048,
+        "learning_rate": 0.004,
+        "activity_reg": 0.001,
+        "conv_filters": 16,
+        "dense_neurons": 16,
+        "dense_layers": 1,
+        "random_seed": 333,
+        "dropout_rate": 0.2
+    },
+    "frances_iowa": {
+        "labels_geom": "Iowa",
+        "features_geom": "CONUS",
+        "epochs": 500,
+        "batch_size": 2048,
+        "learning_rate": 0.004,
+        "activity_reg": 0.001,
+        "conv_filters": 16,
+        "dense_neurons": 16,
+        "dense_layers": 1,
+        "random_seed": 333,
+        "dropout_rate": 0.2
+    },
+    "frances_california": {
+        "labels_geom": "California",
+        "features_geom": "CONUS",
+        "epochs": 500,
+        "batch_size": 2048,
+        "learning_rate": 0.004,
+        "activity_reg": 0.001,
+        "conv_filters": 16,
+        "dense_neurons": 16,
+        "dense_layers": 1,
+        "random_seed": 333,
+        "dropout_rate": 0.2
+    },
+    "frances_newyork": {
+        "labels_geom": "New York",
+        "features_geom": "CONUS",
+        "epochs": 500,
+        "batch_size": 2048,
+        "learning_rate": 0.004,
+        "activity_reg": 0.001,
+        "conv_filters": 16,
+        "dense_neurons": 16,
+        "dense_layers": 1,
+        "random_seed": 333,
+        "dropout_rate": 0.2
+    },
+    "frances_alabama": {
+        "labels_geom": "Alabama",
+        "features_geom": "CONUS",
+        "epochs": 500,
+        "batch_size": 2048,
+        "learning_rate": 0.004,
+        "activity_reg": 0.001,
+        "conv_filters": 16,
+        "dense_neurons": 16,
+        "dense_layers": 1,
+        "random_seed": 333,
+        "dropout_rate": 0.2
+    },
+    "frances_arizona": {
+        "labels_geom": "Arizona",
+        "features_geom": "CONUS",
+        "epochs": 500,
+        "batch_size": 2048,
+        "learning_rate": 0.004,
+        "activity_reg": 0.001,
+        "conv_filters": 16,
+        "dense_neurons": 16,
+        "dense_layers": 1,
+        "random_seed": 333,
+        "dropout_rate": 0.2
+    },
+    "keras_tuner_hp_Colorado_0": {
+        "labels_geom": "Colorado",
+        "features_geom": "CONUS",
+        "batch_size": 2048,
+        "epochs": 500,
+        "class_weights": {
+            "0": 0.5273766893843133,
+            "1": 9.631856540084389
+        },
+        "learning_rate": 0.01,
+        "activity_reg": 0.01,
+        "conv_filters": 16,
+        "dense_neurons": 24,
+        "dense_layers": 3,
+        "random_seed": 165,
+        "dropout_rate": 0.30000000000000004
+    },
+    "keras_tuner_hp_Colorado_1": {
+        "labels_geom": "Colorado",
+        "features_geom": "CONUS",
+        "batch_size": 2048,
+        "epochs": 500,
+        "class_weights": {
+            "0": 0.5273766893843133,
+            "1": 9.631856540084389
+        },
+        "learning_rate": 0.0001,
+        "activity_reg": 0.0001,
+        "conv_filters": 8,
+        "dense_neurons": 8,
+        "dense_layers": 3,
+        "random_seed": 35,
+        "dropout_rate": 0.4
+    },
+    "keras_tuner_hp_Colorado_2": {
+        "labels_geom": "Colorado",
+        "features_geom": "CONUS",
+        "batch_size": 2048,
+        "epochs": 500,
+        "class_weights": {
+            "0": 0.5273766893843133,
+            "1": 9.631856540084389
+        },
+        "learning_rate": 0.01,
+        "activity_reg": 0.01,
+        "conv_filters": 24,
+        "dense_neurons": 24,
+        "dense_layers": 2,
+        "random_seed": 120,
+        "dropout_rate": 0.4
+    },
+    "keras_tuner_hp_Colorado_3": {
+        "labels_geom": "Colorado",
+        "features_geom": "CONUS",
+        "batch_size": 2048,
+        "epochs": 500,
+        "class_weights": {
+            "0": 0.5273766893843133,
+            "1": 9.631856540084389
+        },
+        "learning_rate": 0.01,
+        "activity_reg": 0.01,
+        "conv_filters": 24,
+        "dense_neurons": 24,
+        "dense_layers": 2,
+        "random_seed": 85,
+        "dropout_rate": 0.1
+    },
+    "keras_tuner_hp_Colorado_4": {
+        "labels_geom": "Colorado",
+        "features_geom": "CONUS",
+        "batch_size": 2048,
+        "epochs": 500,
+        "class_weights": {
+            "0": 0.5273766893843133,
+            "1": 9.631856540084389
+        },
+        "learning_rate": 0.01,
+        "activity_reg": 0.0001,
+        "conv_filters": 32,
+        "dense_neurons": 24,
+        "dense_layers": 1,
+        "random_seed": 125,
+        "dropout_rate": 0.1
+    }
+}
