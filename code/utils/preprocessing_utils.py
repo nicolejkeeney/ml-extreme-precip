@@ -3,6 +3,7 @@
 import xarray as xr
 import geopandas as gpd
 import rioxarray as rio
+from shapely.geometry import box
 
 
 def calc_anomalies(data, var):
@@ -32,6 +33,31 @@ def calc_anomalies(data, var):
         "time.dayofyear"
     ) / data["sd"]
     return data
+
+def get_features_geom(geom_name="CONUS"): 
+    """Get geometry for clipping features data
+
+    Parameters
+    ----------
+    geom_name: str
+        Name of geometry. Must be one of ["CONUS"]
+    
+    Returns
+    -------
+    geometry: geopandas.geoseries.GeoSeries
+    
+    """
+    if geom_name == "CONUS":
+        geom = box(
+            -140,  # minx
+            20,  # miny
+            -55,  # maxx
+            55,  # maxy
+        )
+        geom = gpd.GeoSeries(geom, crs="4326")
+    else: 
+        raise ValueError("Could not find geometry {0}".format(geom_name))
+    return geom
 
 
 def get_state_geom(
