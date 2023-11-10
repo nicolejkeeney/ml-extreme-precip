@@ -34,7 +34,7 @@ def calc_anomalies(data, var):
     ) / data["sd"]
     return data
 
-def get_features_geom(geom_name="CONUS"): 
+def get_custom_geom(geom_name="CONUS"): 
     """Get geometry for clipping features data
 
     Parameters
@@ -60,7 +60,7 @@ def get_features_geom(geom_name="CONUS"):
     return geom
 
 
-def get_state_geom(
+def get_us_states_geom(
     state="Colorado", shp_path="../data/cb_2018_us_state_5m/", crs="4326"
 ):
     """

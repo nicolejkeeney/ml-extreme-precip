@@ -27,7 +27,7 @@ from utils.read_data_utils import get_input_data
 # ------------ SET GLOBAL VARIABLES ------------
  
 # Model ID needs to match string key in model_settings.json
-MODEL_ID = "frances_california"
+MODEL_ID = "frances_Alabama"
 
 # Directories. Needs to have a slash (/) after (i.e "dir/"")
 DATA_DIR = "../data/input_data_preprocessed/" 
@@ -134,7 +134,7 @@ def main(model_id=MODEL_ID, data_dir=DATA_DIR, model_output_dir=MODEL_OUTPUT_DIR
 
     return None 
 
-def make_precip_vs_prob_plot(precip_mean, prob_epcp, savefig=True, figures_dir="", dpi=300, fontsize=10, figsize=(6,5), scattercolor="midnightblue", cmap="RdBu_r", in_plot_text=True, ax=None, colorbar=True, bins=25, figname="mean_precip_vs_pred_epcp", title_y=1.03, title="Monthly mean precipitation vs. predicted \nprobability of ECPC for each timestep"): 
+def make_precip_vs_prob_plot(precip_mean, prob_epcp, p95=None, xlim=None, savefig=True, figures_dir="", dpi=300, fontsize=10, figsize=(6,5), scattercolor="midnightblue", cmap="RdBu_r", in_plot_text=True, ax=None, colorbar=True, bins=25, figname="mean_precip_vs_pred_epcp", title_y=1.07, title="Monthly mean precipitation vs. predicted \nprobability of ECPC for each timestep"): 
     """Generate figure: Monthly mean precipitation vs. predicted probability of ECPC for each timestep
     
     Parameters 
@@ -143,6 +143,10 @@ def make_precip_vs_prob_plot(precip_mean, prob_epcp, savefig=True, figures_dir="
         Monthly mean precipitation timeseries 
     prop_epcp: np.array 
         Probability of EPCP timeseries 
+    p95: float, optional 
+        95th percentile. If no input, it will be calculated using precip_mean
+    xlim: tuple, optional 
+        Bounds for x-axis. If no input, it wil be calculated using precip_mean 
     savefig: boolean, optional 
         Save figure as png? Default to True
     figures_dir: str, optional 
@@ -184,8 +188,11 @@ def make_precip_vs_prob_plot(precip_mean, prob_epcp, savefig=True, figures_dir="
     x = precip_mean
     y = prob_epcp
     linecolor = "grey"
-    pr_thr = precip_mean.quantile(0.95).item() # Compute 95% precipitation threshold 
+    if p95 is None:
+        p95 = precip_mean.quantile(0.95).item() # Compute 95% precipitation threshold 
     pr_max = precip_mean.max().item() # Max value on x-axis 
+    if xlim is None: 
+        xlim = (0-pr_max*0.025, pr_max+pr_max*0.05)
 
     # Make scatterplot 
     splot = ax.scatter(
@@ -202,19 +209,18 @@ def make_precip_vs_prob_plot(precip_mean, prob_epcp, savefig=True, figures_dir="
     )
     # Axis limits 
     ylim = (-0.02, 1.03)
-    xlim = (0-pr_max*0.025, pr_max+pr_max*0.05)
     # Add vertical line for 95% precip threshold 
-    ax.vlines(pr_thr, ylim[0], ylim[1], linestyle="dashed", color=linecolor, zorder=10, linewidth=3)
+    ax.vlines(p95, ylim[0], ylim[1], linestyle="dashed", color=linecolor, zorder=10, linewidth=3)
 
     # Add horizontal line for 0.5 probability 
-    ax.hlines(0.5, 0, pr_max+3, linestyle="dotted", color=linecolor, zorder=10, linewidth=3)
+    ax.hlines(0.5, 0, xlim[1], linestyle="dotted", color=linecolor, zorder=10, linewidth=3)
 
     # Add plot decorators 
     if in_plot_text:
         ax.text(pr_max-pr_max*0.1, 0.5, s="non-EPCP          EPCP       ", va="center", size=fontsize, zorder=30, rotation="vertical")
         ax.text(pr_max-pr_max*0.05, 0.5, s="<---          --->", va="center",size=fontsize, zorder=30, rotation="vertical")
     ax.text(
-        pr_thr, 
+        p95, 
         1.07, 
         s="p95", 
         ha="center", 
@@ -278,6 +284,12 @@ def make_precip_vs_prob_plot_by_season(predictions, savefig=True, figures_dir=""
     predictions["time"] = pd.to_datetime(predictions["time"].values)
     predictions["season"] = predictions["time"].dt.month.map(lambda x: get_season_str(x))
 
+    # Comput 95th percentile precip and xlimits 
+    # Same bounds will be used for every plot, regardless of the season
+    p95 = predictions["precip_mean"].quantile(0.95).item() # Compute 95% precipitation threshold 
+    pr_max = predictions["precip_mean"].max().item() # Max value on x-axis 
+    xlim = (0-pr_max*0.025, pr_max+pr_max*0.05)
+
     # Get histogram for entire dataset 
     # This will be used to make the bin edges and colorbar (the figure will never be used )
     # Bins need to be the same for each season! 
@@ -298,6 +310,8 @@ def make_precip_vs_prob_plot_by_season(predictions, savefig=True, figures_dir=""
         fig_one_season = make_precip_vs_prob_plot(
             predictions_one_season[x], 
             predictions_one_season[y], 
+            p95=p95, 
+            xlim=xlim,
             ax=axes[i],
             bins=(xedges,yedges), 
             colorbar = True if i == len(seasons)-1 else False, # Only add colorbar to the last plot

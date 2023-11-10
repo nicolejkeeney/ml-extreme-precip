@@ -115,8 +115,8 @@ def compute_model_metrics(model, x_train, y_train_onehot, x_val, y_val_onehot, x
             "Precision": [prec_train, prec_val, prec_test],
             "Recall": [recall_train, recall_val, recall_test],
             "AUC": [auc_train, auc_val, auc_test],
-        },
-        index=["training", "validation", "testing"],
+            "dataset": ["training", "validation", "testing"]
+        }
     )
     if save_to_png or save_to_csv: 
         _save_model_metrics(
@@ -158,7 +158,7 @@ def _save_model_metrics(model_metrics, save_to_png=True, save_to_csv=True, outpu
 
     # Save pretty table as png
     if save_to_png: 
-        fig = ff.create_table(model_metrics.round(3).reset_index(names="dataset"))
+        fig = ff.create_table(model_metrics.round(3))
         fig.update_layout(
             autosize=False,
             width=500,

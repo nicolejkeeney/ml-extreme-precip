@@ -19,14 +19,13 @@ References:
 import xarray as xr
 import numpy as np
 from glob import glob
-import time
 from datetime import datetime
 import geopandas as gpd
 import os
 
 # Import helper functions
 from utils.preprocessing_utils import (
-    get_features_geom
+    get_custom_geom
     convert_lon_360_to_180,
     clip_to_geom,
     calc_anomalies,
@@ -37,145 +36,146 @@ from utils.misc_utils import (
 )
 import utils.parameters as param
 
-print("Starting script to preprocesses NCAR-NCEP reanalysis data...")
-start_time = time.time()
+## GLOBAL VARIABLES 
+
 DATA_DIR = "../data/"
 GEOM_NAME = "CONUS"
 
-# Get geometry
-geom = get_features_geom(geom_name=GEOM_NAME)
+def main(geom_name=GEOM_NAME, data_dir=DATA_DIR):  
 
-# Make directory for saving preprocessed data if it doesn't already exist
-PREPROCESSED_DATA_DIR = DATA_DIR + "input_data_preprocessed/labels/" + GEOM_NAME +"/"
-check_and_create_dir(PREPROCESSED_DATA_DIR)
+    # Get geometry
+    geom = get_custom_geom(geom_name=geom_name)
 
-## -------- Preprocess sea level pressure data --------
+    # Make directory for saving preprocessed data if it doesn't already exist
+    preprocessed_data_dir = data_dir + "input_data_preprocessed/labels/" + geom_name +"/"
+    check_and_create_dir(preprocessed_data_dir)
 
-print("Preprocessing sea level pressure data...")
+    ## -------- Preprocess sea level pressure data --------
 
-# Open dataset
-var = "slp"  # Variable name
-filepaths_wildcard = DATA_DIR + "{0}_daily_means/{1}*.nc".format(var, var)
-filepaths_all = glob(filepaths_wildcard)
-ds = xr.open_mfdataset(filepaths_all).sel(time=param.time_period)
-global_attrs = ds.attrs
-ds = ds.drop_dims("nbnds")
+    print("Preprocessing sea level pressure data...")
 
-# Convert lon range from 0:360 to -180:180
-ds = convert_lon_360_to_180(ds)
+    # Open dataset
+    var = "slp"  # Variable name
+    filepaths_wildcard = data_dir + "{0}_daily_means/{1}*.nc".format(var, var)
+    filepaths_all = glob(filepaths_wildcard)
+    ds = xr.open_mfdataset(filepaths_all).sel(time=param.time_period)
+    global_attrs = ds.attrs
+    ds = ds.drop_dims("nbnds")
 
-# Clip to geometry
-ds = clip_to_geom(ds, geom)
+    # Convert lon range from 0:360 to -180:180
+    ds = convert_lon_360_to_180(ds)
 
-# Calculate daily standardized anomalies
-ds = calc_anomalies(ds, var)
+    # Clip to geometry
+    ds = clip_to_geom(ds, geom)
 
-# Format the output data
-slp_output_da = ds[var + "_anom"]
-slp_output_da.attrs = {
-    "long_name": "mean daily sea level pressure anomalies",
-    "units": "Pa",
-}
+    # Calculate daily standardized anomalies
+    ds = calc_anomalies(ds, var)
 
-## --- Plot the data (in a python notebook only)
-# import hvplot.xarray
-# import hvplot.pandas
+    # Format the output data
+    slp_output_da = ds[var + "_anom"]
+    slp_output_da.attrs = {
+        "long_name": "mean daily sea level pressure anomalies",
+        "units": "Pa",
+    }
 
-# # US states
-# shp_path = DATA_DIR+"cb_2018_us_state_5m/"
-# not_CONUS = ["Alaska","Hawaii","Commonwealth of the Northern Mariana Islands", "Guam", "American Samoa", "Puerto Rico","United States Virgin Islands"]
-# us_states = gpd.read_file(shp_path)
-# conus = us_states[~us_states["NAME"].isin(not_CONUS)]
-# boundary_pl = conus.hvplot(color=None)
+    ## --- Plot the data (in a python notebook only)
+    # import hvplot.xarray
+    # import hvplot.pandas
 
-# # Geospatial data
-# geo_pl = slp_output_da.hvplot(x="lon",y="lat", cmap="coolwarm")
-# geo_pl*boundary_pl
+    # # US states
+    # shp_path = DATA_DIR+"cb_2018_us_state_5m/"
+    # not_CONUS = ["Alaska","Hawaii","Commonwealth of the Northern Mariana Islands", "Guam", "American Samoa", "Puerto Rico","United States Virgin Islands"]
+    # us_states = gpd.read_file(shp_path)
+    # conus = us_states[~us_states["NAME"].isin(not_CONUS)]
+    # boundary_pl = conus.hvplot(color=None)
 
-## -------- Preprocess geopotential height data --------
+    # # Geospatial data
+    # geo_pl = slp_output_da.hvplot(x="lon",y="lat", cmap="coolwarm")
+    # geo_pl*boundary_pl
 
-print("Preprocessing geopotential height data...")
+    ## -------- Preprocess geopotential height data --------
 
-# Open dataset
-var = "hgt"
-filepaths_wildcard = DATA_DIR + "{0}_daily_means/{1}*.nc".format(var, var)
-filepaths_all = glob(filepaths_wildcard)
-ds = xr.open_mfdataset(filepaths_all).sel(time=param.time_period)
-global_attrs = ds.attrs
+    print("Preprocessing geopotential height data...")
 
-# Clean it up a bit
-level = 500
-ds = ds.sel(time=param.time_period)
-ds = ds.drop_dims("nbnds")
-ds = ds.sel(level=level).drop("level")
+    # Open dataset
+    var = "hgt"
+    filepaths_wildcard = data_dir + "{0}_daily_means/{1}*.nc".format(var, var)
+    filepaths_all = glob(filepaths_wildcard)
+    ds = xr.open_mfdataset(filepaths_all).sel(time=param.time_period)
+    global_attrs = ds.attrs
 
-# Convert lon range from 0:360 to -180:180
-ds = convert_lon_360_to_180(ds)
+    # Clean it up a bit
+    level = 500
+    ds = ds.sel(time=param.time_period)
+    ds = ds.drop_dims("nbnds")
+    ds = ds.sel(level=level).drop("level")
 
-# Clip to geometry
-ds = clip_to_geom(ds, geom)
+    # Convert lon range from 0:360 to -180:180
+    ds = convert_lon_360_to_180(ds)
 
-# Calculate annual domain average 500-hPa GPH to remove seasonal variability
-domain_mean_df = ds[var].groupby("time.year").mean(dim="time").to_dataframe(name=var)
+    # Clip to geometry
+    ds = clip_to_geom(ds, geom)
 
-# Calculate linear trend in 500-hPa GPH
-trend = np.polyfit(
-    domain_mean_df.index.get_level_values("year"), domain_mean_df[var], 1
-)
-print("Slope of trend:", trend[0], "m per year")
+    # Calculate annual domain average 500-hPa GPH to remove seasonal variability
+    domain_mean_df = ds[var].groupby("time.year").mean(dim="time").to_dataframe(name=var)
 
-# Calculate detrended hgt
-ds["change"] = (ds.time.dt.year - int(param.time_start[:4])) * trend[0]
-ds[var + "_detrended"] = ds[var] - ds["change"]
-ds = ds.drop_vars("change")
+    # Calculate linear trend in 500-hPa GPH
+    trend = np.polyfit(
+        domain_mean_df.index.get_level_values("year"), domain_mean_df[var], 1
+    )
+    print("Slope of trend:", trend[0], "m per year")
 
-# Calculate daily standardized anomalies
-ds = calc_anomalies(ds, var + "_detrended")
+    # Calculate detrended hgt
+    ds["change"] = (ds.time.dt.year - int(param.time_start[:4])) * trend[0]
+    ds[var + "_detrended"] = ds[var] - ds["change"]
+    ds = ds.drop_vars("change")
 
-# Format the output data
-hgt_output_da = ds[var + "_detrended_anom"]
-hgt_output_da.attrs = {
-    "long_name": "mean detrended daily geopotential height anomalies",
-    "units": "m",
-    "level": level,
-}
+    # Calculate daily standardized anomalies
+    ds = calc_anomalies(ds, var + "_detrended")
 
-# # Plot the data (in a python notebook only)
-# geo_pl = hgt_output_da.hvplot(x="lon",y="lat", cmap="coolwarm")
-# geo_pl*boundary_pl
+    # Format the output data
+    hgt_output_da = ds[var + "_detrended_anom"]
+    hgt_output_da.attrs = {
+        "long_name": "mean detrended daily geopotential height anomalies",
+        "units": "m",
+        "level": level,
+    }
 
-## -------- Combine datasets for both variables and write to netcdf --------
+    # # Plot the data (in a python notebook only)
+    # geo_pl = hgt_output_da.hvplot(x="lon",y="lat", cmap="coolwarm")
+    # geo_pl*boundary_pl
 
-print("Combining both variables and writing data to netcdfs...")
+    ## -------- Combine datasets for both variables and write to netcdf --------
 
-# Merge DataArrays
-output_ds = xr.merge([hgt_output_da, slp_output_da])
+    print("Combining both variables and writing data to netcdfs...")
 
-# Add descriptive attributes
-output_ds.attrs = global_attrs
-output_ds.attrs["title"] = (
-    global_attrs["title"] + " modified to produce daily anomalies"
-)
-output_ds.attrs["history"] = (
-    global_attrs["history"]
-    + "\nDaily detrended anomalies produced "
-    + datetime.today().strftime("%Y/%m/%d")
-)
+    # Merge DataArrays
+    output_ds = xr.merge([hgt_output_da, slp_output_da])
 
-# Print size of dataset
-nbytes = format_nbytes(output_ds.nbytes)
-print("Size of output dataset: {0}".format(nbytes))
+    # Add descriptive attributes
+    output_ds.attrs = global_attrs
+    output_ds.attrs["title"] = (
+        global_attrs["title"] + " modified to produce daily anomalies"
+    )
+    output_ds.attrs["history"] = (
+        global_attrs["history"]
+        + "\nDaily detrended anomalies produced "
+        + datetime.today().strftime("%Y/%m/%d")
+    )
 
-# Split into training-validation-testing
-training = output_ds.sel(time=param.training_period)
-validation = output_ds.sel(time=param.validation_period)
-testing = output_ds.sel(time=param.testing_period)
+    # Print size of dataset
+    nbytes = format_nbytes(output_ds.nbytes)
+    print("Size of output dataset: {0}".format(nbytes))
 
-# Output to netcdf
-training.to_netcdf(PREPROCESSED_DATA_DIR + "training_features.nc")
-validation.to_netcdf(PREPROCESSED_DATA_DIR + "validation_features.nc")
-testing.to_netcdf(PREPROCESSED_DATA_DIR + "testing_features.nc")
+    # Split into training-validation-testing
+    training = output_ds.sel(time=param.training_period)
+    validation = output_ds.sel(time=param.validation_period)
+    testing = output_ds.sel(time=param.testing_period)
 
-print("Script complete!")
-time_elapsed = time.strftime("%H:%M:%S", time.gmtime(time.time() - start_time))
-print("Time elapsed: {0}".format(time_elapsed))
+    # Output to netcdf
+    training.to_netcdf(preprocessed_data_dir + "training_features.nc")
+    validation.to_netcdf(preprocessed_data_dir + "validation_features.nc")
+    testing.to_netcdf(preprocessed_data_dir + "testing_features.nc")
+
+if __name__ == "__main__":
+    main()
