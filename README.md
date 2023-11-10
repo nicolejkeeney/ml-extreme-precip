@@ -1,6 +1,6 @@
 # ml-extreme-precip
 
-This project attempts to reproduce the analysis performed in Davenport & Diffenbaugh (2021) for the state of Colorado, using both a Random Forest and a Convolutional Neural Network. The goal is to predict extreme precipitation, where extreme precipitation is defined by precipitation that exceeds the 95th percentile of daily precipitation. 
+This project builds on the analysis performed in Davenport & Diffenbaugh (2021) to understand the atmospheric circulation patterns leading to extreme precipitation, using a convolutional neural network. 
 
 ## Input data 
 *Features*: [NCEP-NCAR Renanalysis-1](https://psl.noaa.gov/data/gridded/data.ncep.reanalysis.html)
