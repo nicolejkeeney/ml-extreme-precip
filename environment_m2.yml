@@ -1,4 +1,4 @@
-# Environment for Mac M2 chip with tensorflow for using GPU 
+# Environment for Mac M2 chip w tensorflow for using GPU 
 name: ml-extreme-precip
 channels:
   - apple
