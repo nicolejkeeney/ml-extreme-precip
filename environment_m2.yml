@@ -1,0 +1,49 @@
+# Environment for Mac M2 chip with tensorflow for using GPU 
+name: ml-extreme-precip
+channels:
+  - apple
+  - conda-forge
+dependencies:
+  - python=3.10
+  - tensorflow-deps=2.9.0
+  - pip  
+  - pip: 
+      - tensorflow-macos==2.15.0
+      - tensorflow-metal==1.1.0
+      - tensorflow-probability==0.22.1
+      - numpy==1.26
+  - black=23.10.1
+  - bokeh=3.3.1 
+  - cartopy=0.22.0 
+  - dask=2023.11.0
+  - dask-labextension=7.0.0 
+  - geopandas=0.14.1
+  - geoviews=1.11.0
+  - gdal=3.5.1 
+  - h5py=3.6.0
+  - hdf5=1.12.1
+  - holoviews=1.18.1
+  - hvplot=0.9.0
+  - ipywidgets=8.1.1
+  - jupyter_bokeh=3.0.7
+  - jupyter-server-proxy=4.1.0
+  - jupyterhub-singleuser=4.0.2 
+  - jupyterlab=4.0.8 
+  - jupyterlab_execute_time=3.1.0
+  - keras=2.15.0
+  - matplotlib=3.8.1 
+  - nbgitpuller=1.2.0
+  - netcdf4=1.6.0
+  - notebook=7.0.6 
+  - pandas=2.1.3
+  - plotly=5.18.0 
+  - proj=9.0.1
+  - pyproj=3.4.0
+  - rioxarray=0.15.0
+  - scikit-learn=1.3.2
+  - scipy=1.11.3
+  - shapely=1.8.5
+  - statsmodels=0.14.0
+  - tqdm=4.66.1
+  - xarray=2023.10.1
+  - zarr=2.16.1
