@@ -30,9 +30,9 @@ from utils.read_data_utils import get_input_data
 MODEL_ID = "frances_Alabama"
 
 # Directories. Needs to have a slash (/) after (i.e "dir/"")
-DATA_DIR = "../data/input_data_preprocessed/" 
-MODEL_OUTPUT_DIR = "../model_output/"+MODEL_ID+"/"  # Saved predictions should be here 
-FIGURES_DIR = "../figures/"+MODEL_ID+"/" # Where to save figures to 
+DATA_DIR = "../data/input_data_preprocessed/us_states/" 
+MODEL_OUTPUT_DIR = "../model_output/us_states/"+MODEL_ID+"/"  # Saved predictions should be here 
+FIGURES_DIR = "../figures/us_states/"+MODEL_ID+"/" # Where to save figures to 
 
 # Projection to use for basemap for map figures 
 MAP_CRS = ccrs.AlbersEqualArea(central_longitude=-100, central_latitude=35, standard_parallels=(30, 60))

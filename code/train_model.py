@@ -34,12 +34,12 @@ import tensorflow as tf
 # ------------ SET GLOBAL VARIABLES ------------
  
 # Model ID needs to match string key in model_settings.json
-MODEL_ID = "frances_missouri"
+MODEL_ID = "frances_Missouri"
 
 # Directories. Needs to have a slash (/) after (i.e "dir/")
-DATA_DIR = "../data/input_data_preprocessed/" 
-OUTPUT_DIR = "../model_output/"+MODEL_ID+"/" 
-FIGURES_DIR = "../figures/"+MODEL_ID+"/" 
+DATA_DIR = "../data/input_data_preprocessed/labels/us_states/" 
+OUTPUT_DIR = "../model_output/us_states/"+MODEL_ID+"/" 
+FIGURES_DIR = "../figures/us_states/"+MODEL_ID+"/" 
 
 # Settings 
 SAVE_TRAINING_HISTORY = True 
