@@ -1,5 +1,5 @@
 # Environment for Mac M2 chip w tensorflow for using GPU 
-name: ml-extreme-precip
+name: ml-extreme-precip-tryagain
 channels:
   - apple
   - conda-forge
