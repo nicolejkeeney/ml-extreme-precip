@@ -43,21 +43,21 @@ def get_input_data(data_dir, settings):
     # Read labels csv as pandas DataFrame object
     # Read features netcdf as xarray object
     x_train_ds = xr.open_dataset(
-        data_dir + "features/" + settings["features_geom"] + "/training_features.nc"
+        data_dir + "features/" + settings["features_geom"] + "/" + settings["features_geom"] + "_training_features.nc"
     )
     y_train_df = pd.read_csv(
         data_dir + "labels/" + settings["labels_geom"] + "/training_labels.csv",
         index_col=False,
     )
     x_val_ds = xr.open_dataset(
-        data_dir + "features/" + settings["features_geom"] + "/validation_features.nc"
+        data_dir + "features/" + settings["features_geom"] + "/" + settings["features_geom"] + "_validation_features.nc"
     )
     y_val_df = pd.read_csv(
         data_dir + "labels/" + settings["labels_geom"] + "/validation_labels.csv",
         index_col=False,
     )
     x_test_ds = xr.open_dataset(
-        data_dir + "features/" + "/" + settings["features_geom"] + "/testing_features.nc"
+        data_dir + "features/" + settings["features_geom"] + "/" + settings["features_geom"] + "_testing_features.nc"
     )
     y_test_df = pd.read_csv(
         data_dir + "labels/" + settings["labels_geom"] + "/testing_labels.csv", index_col=False

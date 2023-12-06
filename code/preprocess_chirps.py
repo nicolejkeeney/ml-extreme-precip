@@ -29,11 +29,12 @@ from utils.misc_utils import check_and_create_dir
 # ------------ SET GLOBAL VARIABLES ------------
 
 CHIRPS_DATA_DIR = "../data/chirps_precip/" # Raw CHIRPS data dir 
-OUTPUT_DATA_DIR = "../data/input_data_preprocessed/labels/" # Where to store preprocessed data 
+OUTPUT_DATA_DIR_STATES = "../data/input_data_preprocessed/us_states/labels/" 
+OUTPUT_DATA_DIR_5x5 = "../data/input_data_preprocessed/5x5_grid/labels/"
 SHP_DIR = "../data/cb_2018_us_state_5m/" # US states shapefile
 GEOM_NAME = "Arizona"
 
-def chirps_5x5(chirps_data_dir=CHIRPS_DATA_DIR, output_data_dir=OUTPUT_DATA_DIR, output_filename="chirps_5x5"): 
+def chirps_5x5(chirps_data_dir=CHIRPS_DATA_DIR, output_data_dir=OUTPUT_DATA_DIR_5x5, output_filename="chirps_5x5"): 
     """Get CHIRPS data on a 5x5 grid. 
     Compute 95% quantile and assign precip classes.
     Save output to netcdf file.
@@ -93,7 +94,7 @@ def chirps_5x5(chirps_data_dir=CHIRPS_DATA_DIR, output_data_dir=OUTPUT_DATA_DIR,
     
     return ds_training, ds_validation, ds_testing
 
-def chirps_by_state(geom_name=GEOM_NAME, chirps_data_dir=CHIRPS_DATA_DIR, shp_dir=SHP_DIR, output_data_dir=OUTPUT_DATA_DIR):
+def chirps_by_state(geom_name=GEOM_NAME, chirps_data_dir=CHIRPS_DATA_DIR, shp_dir=SHP_DIR, output_data_dir=OUTPUT_DATA_DIR_STATES):
     """Preprocess CHIRPS data by US state. 
     Save as csv file split by training, validation, and testing as set in param module. 
     

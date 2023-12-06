@@ -92,12 +92,13 @@ def _get_uncompiled_model(
                 kernel_initializer=tf.keras.initializers.RandomNormal(
                     seed=random_seed + 2
                 ),
+                name="dense_"+str(i)
             )
         )
         model.add(layers.Activation("relu"))
 
     model.add(
-        layers.Dense(2, activation="softmax")
+        layers.Dense(2, activation="softmax", name="dense_softmax")
     )  ## classifier layer (binary class where 1=extreme)
     return model
 

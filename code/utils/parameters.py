@@ -1,6 +1,3 @@
-time_start = "1981-01-01"
-time_end = "2023-08-31"
-time_period = slice(time_start, time_end)
 """Shared params between scrips describing problem setup 
 
 Author: 

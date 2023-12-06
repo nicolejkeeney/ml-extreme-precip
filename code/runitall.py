@@ -9,19 +9,19 @@ import utils.parameters as param
 # ------------ SET GLOBAL VARIABLES ------------
 
 # Model ID needs to match string key in model_settings.json
-MODEL_ID = "frances_Iowa"
+MODEL_ID = "frances_Texas"
 
 # Directories. Needs to have a slash (/) after (i.e "dir/"")
-CHIRPS_BY_STATE_DATA_DIR = "../data/input_data_preprocessed/labels/us_states/" 
-GRIDDED_CHIRPS_DATA_DIR = "../data/input_data_preprocessed/labels/chirps_5x5/"
-OUTPUT_DIR = "../model_output/"+MODEL_ID+"/" 
+CHIRPS_BY_STATE_DATA_DIR = "../data/input_data_preprocessed/us_states/" 
+GRIDDED_CHIRPS_DATA_DIR = "../data/input_data_preprocessed/chirps_5x5/"
+OUTPUT_DIR = "../model_output/us_states/"+MODEL_ID+"/" 
 FIGURES_DIR = "../figures/"+MODEL_ID+"/" 
 
 # Save trained tensorflow model? 
 SAVE_MODEL = False
 
-def run_for_grid(filepath=GRIDDED_CHIRPS_DATA_DIR, output_dir="../model_output/", figures_dir="../figures/", save_model=SAVE_MODEL)
-    """Preprocess input labels and run for all gridcells in input file """
+# def run_for_grid(filepath=GRIDDED_CHIRPS_DATA_DIR, output_dir="../model_output/", figures_dir="../figures/", save_model=SAVE_MODEL)
+#     """Preprocess input labels and run for all gridcells in input file """
 
 
 
@@ -97,7 +97,7 @@ def run_for_all_states(data_dir=CHIRPS_BY_STATE_DATA_DIR, output_dir="../model_o
     print("Time elapsed: {0}".format(time_elapsed))
 
 
-def main(data_dir=DATA_DIR, output_dir=OUTPUT_DIR, figures_dir=FIGURES_DIR, model_id=MODEL_ID, save_model=SAVE_MODEL):
+def main(data_dir=CHIRPS_BY_STATE_DATA_DIR, output_dir=OUTPUT_DIR, figures_dir=FIGURES_DIR, model_id=MODEL_ID, save_model=SAVE_MODEL):
 
     # Train model 
     model, predictions = train_model.main(
