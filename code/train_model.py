@@ -30,11 +30,10 @@ from utils.cnn_utils import (
 
 import tensorflow as tf 
 
-
 # ------------ SET GLOBAL VARIABLES ------------
  
 # Model ID needs to match string key in model_settings.json
-MODEL_ID = "frances_Texas"
+MODEL_ID = "frances_New_York"
 
 # Directories. Needs to have a slash (/) after (i.e "dir/")
 DATA_DIR = "../data/input_data_preprocessed/us_states/" 
