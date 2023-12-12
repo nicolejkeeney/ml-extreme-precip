@@ -2,7 +2,9 @@
 .DS_Store
 
 # Pycache 
-__pycache__/*
+__pycache__/ 
+*.pyc
+*/__pycache__/**
 
 # Jupyter notebook checkpoints 
 .ipynb_checkpoints
