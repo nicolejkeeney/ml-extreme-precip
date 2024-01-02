@@ -35,7 +35,8 @@ tf.compat.v1.disable_eager_execution()
 
 # ------------ SET GLOBAL VARIABLES ------------
 
-MODEL_ID = "frances_New_York"
+MODEL_ID = "frances_California"
+STATE = MODEL_ID.split("frances_")[1]
 
 DATA_DIR = "../data/input_data_preprocessed/us_states/" 
 MODEL_OUTPUT_DIR = "../model_output/us_states/"+MODEL_ID+"/"
@@ -76,7 +77,7 @@ def main(model_id=MODEL_ID, data_dir=DATA_DIR, model_output_dir=MODEL_OUTPUT_DIR
     check_and_create_dir(figures_dir)
     
     # Get model settings for MODEL_ID 
-    settings = get_model_settings(MODEL_ID)
+    settings = get_model_settings(model_id)
 
     # ------------ READ IN MODEL INPUT DATA AND TRAINED MODEL ------------
 
@@ -138,9 +139,6 @@ def main(model_id=MODEL_ID, data_dir=DATA_DIR, model_output_dir=MODEL_OUTPUT_DIR
         coords=x_ds.coords
     )
 
-    # Normalize LRP 
-    lrp_ds = (lrp_ds - lrp_ds.min()) / (lrp_ds.max()- lrp_ds.min())
-
     # Get mean LRP on dates in which the model predicts no EPCP (y=0)
     lrp_no_epcp = lrp_ds.sel(time=dates_no_epcp)
     mean_lrp_no_epcp = lrp_no_epcp.mean(dim="time").to_array()
@@ -153,13 +151,17 @@ def main(model_id=MODEL_ID, data_dir=DATA_DIR, model_output_dir=MODEL_OUTPUT_DIR
     print("Making and saving LRP figures...")
 
     cbar_label = "normalized relevance (unitless)"
+    cmap = "viridis"
+    levels = 15
     
     # LRP heatmaps for EPCP days 
     make_heatmap_by_col(
         mean_lrp_epcp, 
         col="variable", 
+        cmap=cmap,
+        levels=levels,
         cbar_label=cbar_label,
-        title="EPCP days: Time-averaged LRP maps", 
+        title=STATE+" EPCP days: Time-averaged LRP maps", 
         figures_dir=figures_dir, 
         savefig=True, 
         figname="lrp_epcp"
@@ -170,7 +172,9 @@ def main(model_id=MODEL_ID, data_dir=DATA_DIR, model_output_dir=MODEL_OUTPUT_DIR
         mean_lrp_no_epcp, 
         col="variable", 
         cbar_label=cbar_label,
-        title="Non-EPCP days: Time-averaged LRP maps", 
+        cmap=cmap,
+        levels=levels,
+        title=STATE+" Non-EPCP days: Time-averaged LRP maps", 
         figures_dir=figures_dir, 
         savefig=True, 
         figname="lrp_non-epcp"
@@ -182,39 +186,39 @@ def main(model_id=MODEL_ID, data_dir=DATA_DIR, model_output_dir=MODEL_OUTPUT_DIR
     print("Peforming k-means clustering with {0} clusters...".format(num_clusters))
     
     # Cluster centers for EPCP days 
-    clusters_epcp_ds = lrp_epcp.apply(kmeans_clusters_xr, num_clusters=num_clusters)
+    clusters_epcp_ds = kmeans_clusters_xr(lrp_epcp.to_array(), num_clusters=num_clusters)
     
     # Cluster centers for non-EPCP days 
-    clusters_no_epcp_ds = lrp_no_epcp.apply(kmeans_clusters_xr, num_clusters=num_clusters)
-    
+    clusters_no_epcp_ds = kmeans_clusters_xr(lrp_no_epcp.to_array(), num_clusters=num_clusters)
 
     # ------------ MAKE CLUSTERS FIGURES ------------ 
     print("Making and saving kmeans cluster figures...")
 
     cbar_label = "normalized relevance (unitless)"
+    levels = 30
     
     # Clusters for EPCP days 
-    for feature in feature_ids: 
-        pl = make_heatmap_by_col(
-            clusters_epcp_ds[feature], 
-            col="cluster", 
-            cbar_label=cbar_label,
-            title="EPCP days: {0}".format(features_dict[feature]), 
-            figures_dir=figures_dir, 
-            savefig=True, 
-            figname="{0}_clusters_epcp".format(feature)
-            )
+    pl = make_heatmap_by_col(
+        clusters_epcp_ds, 
+        col="cluster", 
+        cbar_label=cbar_label,
+        levels=levels, 
+        title=STATE+" EPCP days", 
+        figures_dir=figures_dir, 
+        savefig=True, 
+        figname="clusters_epcp"
+        )
     # Clusters for non-EPCP days 
-    for feature in feature_ids: 
-        pl = make_heatmap_by_col(
-            clusters_no_epcp_ds[feature], 
-            col="cluster", 
-            cbar_label=cbar_label, 
-            title="Non-EPCP days: {0}".format(features_dict[feature]), 
-            figures_dir=figures_dir, 
-            savefig=True, 
-            figname="{0}_clusters_non-epcp".format(feature)
-            )
+    pl = make_heatmap_by_col(
+        clusters_no_epcp_ds, 
+        col="cluster", 
+        cbar_label=cbar_label, 
+        levels=levels,
+        title=STATE+" Non-EPCP days", 
+        figures_dir=figures_dir, 
+        savefig=True, 
+        figname="clusters_non-epcp"
+        )
         
     print("Complete!")
 
