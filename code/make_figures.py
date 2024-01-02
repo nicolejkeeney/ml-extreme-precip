@@ -27,7 +27,7 @@ from utils.figs_utils import (
 # ------------ SET GLOBAL VARIABLES ------------
  
 # Model ID needs to match string key in model_settings.json
-MODEL_ID = "frances_Florida"
+MODEL_ID = "frances_Missouri"
 
 # Directories. Needs to have a slash (/) after (i.e "dir/"")
 DATA_DIR = "../data/input_data_preprocessed/us_states/" 

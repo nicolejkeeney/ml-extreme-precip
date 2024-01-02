@@ -28,12 +28,10 @@ from utils.cnn_utils import (
     make_model_predictions
 )
 
-import tensorflow as tf 
-
 # ------------ SET GLOBAL VARIABLES ------------
  
 # Model ID needs to match string key in model_settings.json
-MODEL_ID = "frances_New_York"
+MODEL_ID = "frances_Missouri"
 
 # Directories. Needs to have a slash (/) after (i.e "dir/")
 DATA_DIR = "../data/input_data_preprocessed/us_states/" 

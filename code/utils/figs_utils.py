@@ -361,7 +361,7 @@ def plot_metrics_by_epoch(training_history, metrics="all", figsize=(7, 6), train
 
     return fig 
 
-def make_heatmap_by_col(da, col, title=None, cmap="hot_r", cbar_label=None, levels=8, map_crs=MAP_CRS, figures_dir="", savefig=True, figname="xr_heatmap"): 
+def make_heatmap_by_col(da, col, title=None, cmap="hot_r", cbar_label=None, levels=20, map_crs=MAP_CRS, figures_dir="", savefig=True, figname="xr_heatmap"): 
     """Make contour plot by column
 
     Parameters
